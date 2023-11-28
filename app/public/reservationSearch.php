@@ -6,9 +6,10 @@
 </form>
 <?php   
     if($_SERVER["REQUEST_METHOD"] == "POST" ){
-        if((isset($_POST["PhoneNum"]) && $_POST["PhoneNum"] != "") || (isset($_POST["ConNum"]) && $_POST["ConNum"] != "")) {
+        if((isset($_POST["PhoneNum"]) && '{$_POST["PhoneNum"]}' != "") || (isset($_POST["ConNum"]) && '{$_POST["ConNum"]}' != "")) {
           include "sql.php";
-          $isreservation = "SELECT user_name, event_id, reservation_date, fee from reservations where phone_number = '{$_POST["PhoneNum"]}' or confirmation_number = '{$_POST["ConNum"]}';
+          $user_id = "SELECT user_id from users where users.cellphone_number == '{$_POST["PhoneNum"]}'";
+          $isreservation = "SELECT user_name, event_id, reservation_date, fee from reservations where user_id = $user_id or confirmation_number = '{$_POST["ConNum"]}'";
           $result = $conn->query($isreservation);
           if ($result->num_rows >0) {
             while($row = $result->fetch_array()) {
@@ -41,17 +42,14 @@
                   if ($cancelled == false) {
                     ?>
                     <tr>
-                    <td><?php echo $row['user_name'];?></td>
+                    <td><?php echo $row['user_id'];?></td>
                     <td><?php echo $row['venue_id']-$row['numOfZones'];?></td>
                     <td><?php echo $row['event_id'];?></td>
                     <td><?php echo $row['reservation_date'];?></td>
                     <td><?php echo $row['fee'];?></td>
-                    <td> <form method="post">  <input type="hidden" name="zone_id" value="<?php echo $row['zone_id']; ?>">
-                    <input type="hidden" name="venue_id" value="<?php echo $venue_id; ?>">
-                    <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-                    <input type="hidden" name="rate" value="<?php echo $row['rate']; ?>">
-                    <input type="hidden" name="d" value="<?php echo $date; ?>">
-                    <button type="submit" name="Cancel">Reserve</button></form>
+                    <td> <form method="post"> 
+                        <input type="hidden" name="ConNum" value="<?php echo $row['confirmation_number']; ?>">
+                        <button type="submit" name="Cancel">Cancel</button></form>
                     </td>
                     </tr>
                
@@ -75,16 +73,21 @@
           echo "No reservations for this criteria";
         } 
     }
-  }
   if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['Cancel'])) { 
      ?><strong>Are you sure you want to cancel your reservation?</strong>
      <form action="" method="post">
-        <button type="submit" name="Yes">Reserve</button></form>
-        <button type="submit" name="No">Reserve</button></form>
+        <button type="submit" name="Yes">Yes</button></form>
+        <button type="submit" name="No">No</button></form>
      </form>
-  <?php   
-    
+     <?php   
     }
     }
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        if(isset($_POST['Yes'])) { 
+            UPDATE reservations
+            SET is_cancelled = false
+            WHERE confirmation_number = $row['confirmation_number'];
+        }
+        }
 ?>
