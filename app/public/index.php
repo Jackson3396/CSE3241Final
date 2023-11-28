@@ -27,6 +27,12 @@
           <?php include "adminLogin.php"; ?>
         </div>
       </article>
+      <?php
+        include "sql.php";
+        $date = date('Y-m-d');
+        $sql = "UPDATE reservations set is_cancelled=TRUE WHERE reservation_date < '$date'";
+        $result = $conn->query($sql);
+      ?>
     </main>
   </body>
 </html>

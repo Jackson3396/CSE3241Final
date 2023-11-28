@@ -30,4 +30,6 @@ VALUES
 INSERT INTO events 
 VALUES
    (0,'Concert','2023-11-30',1),
-   (0,'Concert','2023-11-27',2)
+   (0,'Concert','2023-12-27',2),
+   (0,'Concert','2023-11-27',3),
+   (0,'Concert','2023-12-1',2)
