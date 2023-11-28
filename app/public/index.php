@@ -27,7 +27,6 @@
           <?php include "adminLogin.php"; ?>
         </div>
       </article>
-      
     </main>
   </body>
 </html>

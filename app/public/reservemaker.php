@@ -31,13 +31,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST" ){
                         }
                     }
                 }   
-                $sql = "INSERT INTO reservations values(0,($user_num),($zone_id),($event_id),'$date',($rate),False)";
+                $sql = "INSERT INTO reservations values(0,'{$_POST["Name"]}','{$_POST["Phone"]}',($user_num),($zone_id),($event_id),'$date',($rate),False)";
                 $result = $conn->query($sql);
                 if (!$result) die($conn->error);
                 else{
                     echo "Success!\n";
                 }
-                $sql = "SELECT confirmation_number FROM reservations where user_id=($user_num) order by confirmation_number DESC LIMIT 1";
+                $sql = "SELECT confirmation_number FROM reservations where phone_number=($cellphone_number) order by confirmation_number DESC LIMIT 1";
                 $result = $conn->query($sql);
                 $con_num = NULL;
                 if ($result) {
